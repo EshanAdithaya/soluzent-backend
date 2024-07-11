@@ -14,9 +14,8 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   app.enableCors({
     origin: [
-      'http://localhost:3001',
-      'https://deploy-preview-8--soluzent-marketing-devtesting.netlify.app',
       'https://soluzent-marketing-devtesting.netlify.app',
+      'http://localhost:3001',
     ], // Allow requests from this origin
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
