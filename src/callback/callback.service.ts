@@ -36,7 +36,7 @@ export class CallbackService {
     oAuthCallbackDto: OAuthCallbackDto,
   ): Promise<any> {
     console.log('called');
-    console.log(provider);
+    console.log('provider');
     console.log(oAuthCallbackDto);
     const { code } = oAuthCallbackDto;
     let tokenUrl = '';
