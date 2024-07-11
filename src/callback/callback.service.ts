@@ -42,7 +42,8 @@ export class CallbackService {
     let tokenUrl = '';
     let clientId = '';
     let clientSecret = '';
-    const redirectUri = 'http://localhost:3001/callback';
+    const redirectUri =
+      'https://soluzent-marketing-devtesting.netlify.app/callback';
 
     switch (provider) {
       case 'facebook':
