@@ -16,6 +16,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3001',
       'https://deploy-preview-8--soluzent-marketing-devtesting.netlify.app',
+      'https://soluzent-marketing-devtesting.netlify.app',
     ], // Allow requests from this origin
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
