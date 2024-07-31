@@ -44,4 +44,8 @@ export declare class FacebookPageService {
         status: boolean;
         message: string;
     }>;
+    classifyMetrics(metrics: string[]): {
+        pageMetrics: string[];
+        postMetrics: string[];
+    };
 }

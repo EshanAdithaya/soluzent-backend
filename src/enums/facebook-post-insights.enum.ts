@@ -1,0 +1,38 @@
+// src/enums/post-metrics.enum.ts
+
+export enum PostMetrics {
+  POST_ENGAGED_USERS = 'post_engaged_users',
+  POST_NEGATIVE_FEEDBACK = 'post_negative_feedback',
+  POST_NEGATIVE_FEEDBACK_UNIQUE = 'post_negative_feedback_unique',
+  POST_NEGATIVE_FEEDBACK_BY_TYPE = 'post_negative_feedback_by_type',
+  POST_NEGATIVE_FEEDBACK_BY_TYPE_UNIQUE = 'post_negative_feedback_by_type_unique',
+  POST_ENGAGED_FAN = 'post_engaged_fan',
+  POST_CLICKS = 'post_clicks',
+  POST_CLICKS_UNIQUE = 'post_clicks_unique',
+  POST_CLICKS_BY_TYPE = 'post_clicks_by_type',
+  POST_CLICKS_BY_TYPE_UNIQUE = 'post_clicks_by_type_unique',
+
+  POST_IMPRESSIONS = 'post_impressions',
+  POST_IMPRESSIONS_UNIQUE = 'post_impressions_unique',
+  POST_IMPRESSIONS_PAID = 'post_impressions_paid',
+  POST_IMPRESSIONS_PAID_UNIQUE = 'post_impressions_paid_unique',
+  POST_IMPRESSIONS_FAN = 'post_impressions_fan',
+  POST_IMPRESSIONS_FAN_UNIQUE = 'post_impressions_fan_unique',
+  POST_IMPRESSIONS_ORGANIC = 'post_impressions_organic',
+  POST_IMPRESSIONS_ORGANIC_UNIQUE = 'post_impressions_organic_unique',
+  POST_IMPRESSIONS_VIRAL = 'post_impressions_viral',
+  POST_IMPRESSIONS_VIRAL_UNIQUE = 'post_impressions_viral_unique',
+  POST_IMPRESSIONS_NONVIRAL = 'post_impressions_nonviral',
+  POST_IMPRESSIONS_NONVIRAL_UNIQUE = 'post_impressions_nonviral_unique',
+  POST_IMPRESSIONS_BY_STORY_TYPE = 'post_impressions_by_story_type',
+  POST_IMPRESSIONS_BY_STORY_TYPE_UNIQUE = 'post_impressions_by_story_type_unique',
+  POST_IMPRESSIONS_BY_PAID_NON_PAID = 'post_impressions_by_paid_non_paid',
+
+  POST_REACTIONS_LIKE_TOTAL = 'post_reactions_like_total',
+  POST_REACTIONS_LOVE_TOTAL = 'post_reactions_love_total',
+  POST_REACTIONS_WOW_TOTAL = 'post_reactions_wow_total',
+  POST_REACTIONS_HAHA_TOTAL = 'post_reactions_haha_total',
+  POST_REACTIONS_SORRY_TOTAL = 'post_reactions_sorry_total',
+  POST_REACTIONS_ANGER_TOTAL = 'post_reactions_anger_total',
+  POST_REACTIONS_BY_TYPE_TOTAL = 'post_reactions_by_type_total',
+}

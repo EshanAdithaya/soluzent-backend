@@ -33,6 +33,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "mysql2": "^3.10.2",
+    "openai": "^4.52.7",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pm2": "^5.4.1",

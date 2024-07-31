@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -19,6 +20,7 @@ import {
   ApiNotFoundResponse,
   ApiBearerAuth,
   ApiParam,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { CreateFacebookPageDto } from './dto/CreateFacebookPage.dto';
 import { UpdateFacebookPageDto } from './dto/UpdateFacebookPage.dto';
@@ -35,6 +37,29 @@ import { GetPostsFilterDto } from './dto/filter-facebook-posts.dto';
 @Controller('facebook-pages')
 export class FacebookPageController {
   constructor(private readonly facebookPageService: FacebookPageService) {}
+  @Get('/metrice')
+  @ApiOperation({ summary: 'Get metice type' })
+  @ApiQuery({
+    name: 'metrics',
+    type: String,
+    description: 'Comma-separated list of metrics to fetch',
+    example: 'page_impressions,page_engaged_users',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched metrics',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+  })
+  async getMetrics(@Query('metrics') metrics: string): Promise<any> {
+    const metricsArray = metrics.split(','); // Assuming metrics are passed as a comma-separated string
+    const combinedMetrics =
+      await this.facebookPageService.classifyMetrics(metricsArray);
+    return combinedMetrics;
+  }
 
   @Post()
   @ApiOperation({ summary: 'Create a new Facebook Page' })
