@@ -11,6 +11,8 @@ import { FacebookPost } from './entitys/facebook-posts.entity';
 import { CreatePostDto } from './dto/create-facebook-post.dto';
 import { UpdatePostDto } from './dto/update-facebook-post.dto';
 import { GetPostsFilterDto } from './dto/filter-facebook-posts.dto';
+import { PageMetrics } from 'src/enums/facebook-page-insights.enum';
+import { PostMetrics } from 'src/enums/facebook-post-insights.enum';
 
 @Injectable()
 export class FacebookPageService {
@@ -207,5 +209,25 @@ export class FacebookPageService {
       status: true,
       message: 'Post successcully deleted',
     };
+  }
+  classifyMetrics(metrics: string[]): {
+    pageMetrics: string[];
+    postMetrics: string[];
+  } {
+    const pageMetrics: string[] = [];
+    const postMetrics: string[] = [];
+    // console.log(metrics);
+    metrics.forEach((metric) => {
+      // console.log(metric);
+      if (Object.values(PageMetrics).includes(metric as PageMetrics)) {
+        pageMetrics.push(metric);
+        console.log(metric);
+      } else if (Object.values(PostMetrics).includes(metric as PostMetrics)) {
+        postMetrics.push(metric);
+        console.log(metric);
+      }
+    });
+
+    return { pageMetrics, postMetrics };
   }
 }
