@@ -13,6 +13,8 @@ import { UpdatePostDto } from './dto/update-facebook-post.dto';
 import { GetPostsFilterDto } from './dto/filter-facebook-posts.dto';
 import { PageMetrics } from 'src/enums/facebook-page-insights.enum';
 import { PostMetrics } from 'src/enums/facebook-post-insights.enum';
+import axios, { AxiosResponse } from 'axios';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class FacebookPageService {
@@ -26,7 +28,7 @@ export class FacebookPageService {
     @InjectRepository(FacebookPost)
     private readonly postRepository: Repository<FacebookPost>,
   ) {}
-
+  baseUrl = 'https://graph.facebook.com/v10.0';
   async create(
     createFacebookPageDto: CreateFacebookPageDto,
   ): Promise<FacebookPage> {
@@ -172,6 +174,30 @@ export class FacebookPageService {
       status: true,
       message: 'Post successcully updated',
     };
+  }
+  async getPostHistoryWithoutPagination(
+    pageId: string,
+    // accessToken: string,
+  ) {
+    const facebookPage = await this.findOne(pageId);
+    if (!facebookPage) {
+      return { status: false, data: 'No page found for Id' };
+    }
+    const url =
+      `${this.baseUrl}/${facebookPage.pageId}/feed?access_token=` +
+      facebookPage.accessToken;
+    const params = {
+      // access_token: facebookPage.accessToken,
+      // scope: null,
+      limit: 100,
+    };
+
+    try {
+      const response = await axios.get(url, { params });
+      return { data: response.data };
+    } catch (error) {
+      throw new Error(`Error posting to Facebook feed: ${error.message}`);
+    }
   }
   async findFacebookPosts(filterDto: GetPostsFilterDto, userId: string) {
     const { rootAccountId, pageId } = filterDto;

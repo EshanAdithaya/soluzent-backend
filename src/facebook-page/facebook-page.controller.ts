@@ -189,4 +189,28 @@ export class FacebookPageController {
       throw error; // Let other unexpected errors propagate
     }
   }
+  @Post('/post-feed-history')
+  @ApiQuery({
+    name: 'pageId',
+    type: String,
+    description: 'The ID of the Facebook page',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully posted to Facebook feed',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+  })
+  async postToFeed(@Query('pageId') pageId: string) {
+    try {
+      const result =
+        await this.facebookPageService.getPostHistoryWithoutPagination(pageId);
+      return result.data;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
 }
