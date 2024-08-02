@@ -15,6 +15,7 @@ import { PageMetrics } from 'src/enums/facebook-page-insights.enum';
 import { PostMetrics } from 'src/enums/facebook-post-insights.enum';
 import axios, { AxiosResponse } from 'axios';
 import { lastValueFrom } from 'rxjs';
+import { response } from 'express';
 
 @Injectable()
 export class FacebookPageService {
@@ -183,11 +184,9 @@ export class FacebookPageService {
     if (!facebookPage) {
       return { status: false, data: 'No page found for Id' };
     }
-    const url =
-      `${this.baseUrl}/${facebookPage.pageId}/feed?access_token=` +
-      facebookPage.accessToken;
+    const url = `${this.baseUrl}/${facebookPage.pageId}/feed`;
     const params = {
-      // access_token: facebookPage.accessToken,
+      access_token: facebookPage.accessToken,
       // scope: null,
       limit: 100,
     };
@@ -196,6 +195,101 @@ export class FacebookPageService {
       const response = await axios.get(url, { params });
       return { data: response.data };
     } catch (error) {
+      throw new Error(`Error posting to Facebook feed: ${error.message}`);
+    }
+  }
+  async getPostAttachmentsWithoutPagination(
+    postId: string,
+    pageId: string,
+    // accessToken: string,
+  ) {
+    const facebookPage = await this.findOne(pageId);
+    if (!facebookPage) {
+      return { status: false, data: 'No page found for Id' };
+    }
+    const url = `${this.baseUrl}/${postId}/attachments`;
+    const params = {
+      access_token: facebookPage.accessToken,
+      limit: 100,
+    };
+
+    try {
+      const response = await axios.get(url, { params });
+      console.log(response.data);
+      return { data: response.data };
+    } catch (error) {
+      // console.log(response.status);
+      console.log(postId, pageId);
+      throw new Error(`Error posting to Facebook feed: ${error.message}`);
+    }
+  }
+  async getPageAnalytics(
+    // postId: string,
+    pageId: string,
+    metric: string,
+    since: string,
+    until: string,
+    // accessToken: string,
+  ) {
+    console.log('trsting');
+    const facebookPage = await this.findOne(pageId);
+    // console.log(facebookPage);
+    if (!facebookPage) {
+      return { status: false, data: 'No page found for Id' };
+    }
+    const url = `${this.baseUrl}/${facebookPage.pageId}/insights`;
+    const params = {
+      access_token: facebookPage.accessToken,
+      metric: metric,
+      period: 'week',
+      since: since,
+      until: until,
+    };
+
+    try {
+      const response = await axios.get(url, { params });
+      // console.log('get');
+      // console.log(response);
+      return { data: response.data.data };
+    } catch (error) {
+      // console.log(response.status);
+      // console.log(postId, pageId);
+      // console.log(error);
+      throw new Error(`Error posting to Facebook feed: ${error.message}`);
+    }
+  }
+  async getPostAnalytics(
+    postId: string,
+    pageId: string,
+    metric: string,
+    since: string,
+    until: string,
+    // accessToken: string,
+  ) {
+    console.log('trsting');
+    const facebookPage = await this.findOne(pageId);
+    // console.log(facebookPage);
+    if (!facebookPage) {
+      return { status: false, data: 'No page found for Id' };
+    }
+    const url = `${this.baseUrl}/${postId}/insights`;
+    const params = {
+      access_token: facebookPage.accessToken,
+      metric: metric,
+      period: 'lifetime',
+      since: since,
+      until: until,
+    };
+
+    try {
+      const response = await axios.get(url, { params });
+      // console.log('get');
+      // console.log(response);
+      return { data: response.data.data };
+    } catch (error) {
+      // console.log(response.status);
+      // console.log(postId, pageId);
+      // console.log(error);
       throw new Error(`Error posting to Facebook feed: ${error.message}`);
     }
   }

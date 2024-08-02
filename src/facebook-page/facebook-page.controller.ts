@@ -37,6 +37,193 @@ import { GetPostsFilterDto } from './dto/filter-facebook-posts.dto';
 @Controller('facebook-pages')
 export class FacebookPageController {
   constructor(private readonly facebookPageService: FacebookPageService) {}
+  @Get('/post-analytics')
+  @ApiQuery({
+    name: 'pageId',
+    type: String,
+    description: 'The ID of the Facebook page',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'postId',
+    type: String,
+    description: 'The ID of the Facebook post',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'metric',
+    type: String,
+    description:
+      'The metric to query. Valid metrics are: post_engaged_users, post_negative_feedback, post_negative_feedback_unique, post_negative_feedback_by_type, post_negative_feedback_by_type_unique, post_engaged_fan, post_clicks, post_clicks_unique, post_clicks_by_type, post_clicks_by_type_unique, post_impressions, post_impressions_unique, post_impressions_paid, post_impressions_paid_unique, post_impressions_fan, post_impressions_fan_unique, post_impressions_organic, post_impressions_organic_unique, post_impressions_viral, post_impressions_viral_unique, post_impressions_nonviral, post_impressions_nonviral_unique, post_impressions_by_story_type, post_impressions_by_story_type_unique, post_impressions_by_paid_non_paid.',
+    required: true,
+    enum: [
+      'post_engaged_users',
+      'post_negative_feedback',
+      'post_negative_feedback_unique',
+      'post_negative_feedback_by_type',
+      'post_negative_feedback_by_type_unique',
+      'post_engaged_fan',
+      'post_clicks',
+      'post_clicks_unique',
+      'post_clicks_by_type',
+      'post_clicks_by_type_unique',
+      'post_impressions',
+      'post_impressions_unique',
+      'post_impressions_paid',
+      'post_impressions_paid_unique',
+      'post_impressions_fan',
+      'post_impressions_fan_unique',
+      'post_impressions_organic',
+      'post_impressions_organic_unique',
+      'post_impressions_viral',
+      'post_impressions_viral_unique',
+      'post_impressions_nonviral',
+      'post_impressions_nonviral_unique',
+      'post_impressions_by_story_type',
+      'post_impressions_by_story_type_unique',
+      'post_impressions_by_paid_non_paid',
+      'post_reactions_like_total',
+      'post_reactions_love_total',
+      'post_reactions_wow_total',
+      'post_reactions_haha_total',
+      'post_reactions_sorry_total',
+      'post_reactions_anger_total',
+      'post_reactions_by_type_total',
+    ],
+  })
+  @ApiQuery({
+    name: 'since',
+    type: String,
+    description: 'Start date for the analytics data (format: YYYY-MM-DD)',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'until',
+    type: String,
+    description: 'End date for the analytics data (format: YYYY-MM-DD)',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved post engagement analytics',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+  })
+  async getPostAnalytic(
+    @Query('postId') postId: string,
+    @Query('pageId') pageId: string,
+    @Query('metric') metric: string,
+    @Query('since') since: string,
+    @Query('until') until: string,
+  ) {
+    try {
+      const result = await this.facebookPageService.getPostAnalytics(
+        postId,
+        pageId,
+        metric,
+        since,
+        until,
+      );
+      return result;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  @Get('/page-analytics')
+  @ApiQuery({
+    name: 'pageId',
+    type: String,
+    description: 'The ID of the Facebook page',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'metric',
+    type: String,
+    description:
+      'The metric to query. Valid metrics are: page_post_engagements, page_consumptions_unique, page_consumptions_by_consumption_type, page_consumptions_by_consumption_type_unique, page_places_checkin_total, page_places_checkin_total_unique, page_negative_feedback, page_negative_feedback_unique, page_negative_feedback_by_type, page_negative_feedback_by_type_unique, page_fans_online, page_fans_online_per_day, page_fan_adds_by_paid_non_paid_unique, page_lifetime_engaged_followers_unique, page_daily_follows, page_daily_follows_unique, page_daily_unfollows_unique, page_follows, page_impressions, page_impressions_unique, page_impressions_paid, page_impressions_paid_unique, page_impressions_organic_v2, page_impressions_organic_unique_v2, page_impressions_viral, page_impressions_viral_unique, page_impressions_nonviral, page_impressions_nonviral_unique, page_impressions_by_story_type, page_impressions_by_story_type_unique, page_impressions_by_city_unique, page_impressions_by_country_unique, page_impressions_by_locale_unique, page_impressions_by_age_gender_unique, page_impressions_viral_frequency_distribution.',
+    required: true,
+    enum: [
+      'page_post_engagements',
+      'page_consumptions_unique',
+      'page_consumptions_by_consumption_type',
+      'page_consumptions_by_consumption_type_unique',
+      'page_places_checkin_total',
+      'page_places_checkin_total_unique',
+      'page_negative_feedback',
+      'page_negative_feedback_unique',
+      'page_negative_feedback_by_type',
+      'page_negative_feedback_by_type_unique',
+      'page_fans_online',
+      'page_fans_online_per_day',
+      'page_fan_adds_by_paid_non_paid_unique',
+      'page_lifetime_engaged_followers_unique',
+      'page_daily_follows',
+      'page_daily_follows_unique',
+      'page_daily_unfollows_unique',
+      'page_follows',
+      'page_impressions',
+      'page_impressions_unique',
+      'page_impressions_paid',
+      'page_impressions_paid_unique',
+      'page_impressions_organic_v2',
+      'page_impressions_organic_unique_v2',
+      'page_impressions_viral',
+      'page_impressions_viral_unique',
+      'page_impressions_nonviral',
+      'page_impressions_nonviral_unique',
+      'page_impressions_by_story_type',
+      'page_impressions_by_story_type_unique',
+      'page_impressions_by_city_unique',
+      'page_impressions_by_country_unique',
+      'page_impressions_by_locale_unique',
+      'page_impressions_by_age_gender_unique',
+      'page_impressions_viral_frequency_distribution',
+    ],
+  })
+  @ApiQuery({
+    name: 'since',
+    type: String,
+    description: 'Start date for the analytics data (format: YYYY-MM-DD)',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'until',
+    type: String,
+    description: 'End date for the analytics data (format: YYYY-MM-DD)',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved post engagement analytics',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+  })
+  async getPageEngagement(
+    // @Query('postId') postId: string,
+    @Query('pageId') pageId: string,
+    @Query('metric') metric: string,
+    @Query('since') since: string,
+    @Query('until') until: string,
+  ) {
+    try {
+      const result = await this.facebookPageService.getPageAnalytics(
+        // postId,
+        pageId,
+        metric,
+        since,
+        until,
+      );
+      return result;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
   @Get('/metrice')
   @ApiOperation({ summary: 'Get metice type' })
   @ApiQuery({
@@ -209,6 +396,43 @@ export class FacebookPageController {
     try {
       const result =
         await this.facebookPageService.getPostHistoryWithoutPagination(pageId);
+      return result.data;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+  // @UseGuards(JwtAuthGuard)
+  @Post('/get-post-atachments')
+  @ApiQuery({
+    name: 'pageId',
+    type: String,
+    description: 'The ID of the Facebook page',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'postId',
+    type: String,
+    description: 'The ID of the Facebook Post',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully posted to Facebook feed',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+  })
+  async getPostAtacments(
+    @Query('postId') postId: string,
+    @Query('pageId') pageId: string,
+  ) {
+    try {
+      const result =
+        await this.facebookPageService.getPostAttachmentsWithoutPagination(
+          postId,
+          pageId,
+        );
       return result.data;
     } catch (error) {
       return { error: error.message };
