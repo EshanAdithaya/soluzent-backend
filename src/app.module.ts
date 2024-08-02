@@ -18,6 +18,7 @@ import { FacebookPage } from './facebook-page/entitys/facebook-page.entity';
 import { RootAccount } from './root-account/entitys/root-account.entity';
 import { YoutubeChannel } from './youtube-channel/entitys/youtube-channel.entity';
 import { FacebookPost } from './facebook-page/entitys/facebook-posts.entity';
+import { OpenaiFacebookModule } from './openai-facebook/openai-facebook.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { FacebookPost } from './facebook-page/entitys/facebook-posts.entity';
     RootAccountModule,
     YoutubeChannelModule,
     FacebookPageModule,
+    OpenaiFacebookModule,
   ],
   controllers: [AppController],
   providers: [UserService, AuthService, AppService, JwtService],

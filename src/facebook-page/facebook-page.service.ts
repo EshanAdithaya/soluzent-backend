@@ -293,6 +293,30 @@ export class FacebookPageService {
       throw new Error(`Error posting to Facebook feed: ${error.message}`);
     }
   }
+  async getPostFromID(
+    postId: string,
+    pageId: string,
+    // accessToken: string,
+  ) {
+    console.log('trsting');
+    const facebookPage = await this.findOne(pageId);
+    console.log(facebookPage);
+    if (!facebookPage) {
+      return { status: false, data: 'No page found for Id' };
+    }
+    const url = `${this.baseUrl}/${postId}`;
+    const params = {
+      access_token: facebookPage.accessToken,
+    };
+
+    // try {
+    const response = await axios.get(url, { params });
+    console.log(response);
+    return { data: response.data };
+    // } catch (error) {
+    //   throw new Error(`Error posting to Facebook feed: ${error.message}`);
+    // }
+  }
   async findFacebookPosts(filterDto: GetPostsFilterDto, userId: string) {
     const { rootAccountId, pageId } = filterDto;
 

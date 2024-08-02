@@ -37,6 +37,41 @@ import { GetPostsFilterDto } from './dto/filter-facebook-posts.dto';
 @Controller('facebook-pages')
 export class FacebookPageController {
   constructor(private readonly facebookPageService: FacebookPageService) {}
+  @Get('post/:postId')
+  @ApiOperation({ summary: 'Get a Facebook post by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The Facebook post data',
+    schema: {
+      example: {
+        data: {
+          id: 'postId',
+          message: 'Post message',
+          created_time: '2024-08-01T12:00:00+0000',
+          // Add more fields as per the response structure
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  async getPostFromID(
+    @Param('postId') postId: string,
+    @Query('pageId') pageId: string,
+  ): Promise<{ data?: any; status?: boolean; error?: string }> {
+    // try {
+    const result = await this.facebookPageService.getPostFromID(postId, pageId);
+    // if (!result.data) {
+    //   throw new NotFoundException('No page found for Id');
+    // }
+    return result;
+    // } catch (error) {
+    //   console.log(error);
+    //   // throw new InternalServerErrorException(
+    //   //   `Error fetching post from Facebook: ${error.message}`,
+    //   // );
+    // }
+  }
+
   @Get('/post-analytics')
   @ApiQuery({
     name: 'pageId',
