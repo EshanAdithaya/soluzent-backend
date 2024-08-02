@@ -189,6 +189,7 @@ export class FacebookPageController {
       throw error; // Let other unexpected errors propagate
     }
   }
+  @UseGuards(JwtAuthGuard)
   @Post('/post-feed-history')
   @ApiQuery({
     name: 'pageId',
