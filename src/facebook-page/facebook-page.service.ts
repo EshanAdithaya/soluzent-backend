@@ -231,7 +231,7 @@ export class FacebookPageService {
     until: string,
     // accessToken: string,
   ) {
-    console.log('trsting');
+    console.log('trsting Page');
     const facebookPage = await this.findOne(pageId);
     // console.log(facebookPage);
     if (!facebookPage) {
@@ -249,13 +249,18 @@ export class FacebookPageService {
     try {
       const response = await axios.get(url, { params });
       // console.log('get');
-      // console.log(response);
+      console.log(response);
       return { data: response.data.data };
     } catch (error) {
       // console.log(response.status);
       // console.log(postId, pageId);
-      // console.log(error);
-      throw new Error(`Error posting to Facebook feed: ${error.message}`);
+      console.log(error);
+      return {
+        message: 'Request failed from facebook',
+        status: false,
+        error: error,
+      };
+      // throw new Error(`Error posting to Facebook feed: ${error.message}`);
     }
   }
   async getPostAnalytics(
@@ -287,11 +292,16 @@ export class FacebookPageService {
       console.log(response.data);
       return { data: response.data.data };
     } catch (error) {
+      return {
+        message: 'Request failed from facebook',
+        status: false,
+        error: error,
+      };
       // console.log(response.data);
       // console.log(response.status);
       // console.log(postId, pageId);
       // console.log(error);
-      throw new Error(`Error posting to Facebook feed: ${error.message}`);
+      // throw new Error(`Error posting to Facebook feed: ${error.message}`);
     }
   }
   async getPostFromID(
