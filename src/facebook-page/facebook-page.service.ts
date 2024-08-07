@@ -284,9 +284,10 @@ export class FacebookPageService {
     try {
       const response = await axios.get(url, { params });
       // console.log('get');
-      // console.log(response);
+      console.log(response.data);
       return { data: response.data.data };
     } catch (error) {
+      // console.log(response.data);
       // console.log(response.status);
       // console.log(postId, pageId);
       // console.log(error);
