@@ -44,6 +44,7 @@ export class CallbackService {
     let clientSecret = '';
     const redirectUri =
       'https://soluzent-marketing-devtesting.netlify.app/callback';
+    // const redirectUri = 'http://localhost:3000/callback';
 
     switch (provider) {
       case 'facebook':
@@ -86,10 +87,7 @@ export class CallbackService {
             userId,
             pageLinked,
           );
-        // if (pageLinked) {
-        //   this.getPagesList(response.data.access_token, userId);
-        // }
-        // this.getPagesList(response.data.access_token, userId);
+
         case 'instagram':
           console.log();
         case 'tiktok':
@@ -130,7 +128,7 @@ export class CallbackService {
         createDto.accountName = response.data.name;
         createDto.accessToken = accessToken;
         createDto.refreshToken = null;
-        createDto.expiresIn = 4320000; //50days
+        createDto.expiresIn = 4320000;
         createDto.userId = userId;
         createDto.email = response.data.email;
         // Assuming createRootAccountDto is populated with necessary data
@@ -138,7 +136,6 @@ export class CallbackService {
         // console.log(RootAccount);
         if (pageLinked && RootAccount) {
           const pagesUrl = `https://graph.facebook.com/me/accounts?fields=id,name,access_token&access_token=${accessToken}`;
-
           try {
             // const rootAccount = await this.rootAccountService.findOne(
             //   RootAccount.id,
@@ -157,7 +154,7 @@ export class CallbackService {
               );
             }
             const response = await axios.get(pagesUrl);
-
+            console.log(response);
             const facebookPage = new FacebookPage();
             facebookPage.accessToken = response.data.data[0].access_token;
             facebookPage.pageId = response.data.data[0].id;
@@ -174,7 +171,7 @@ export class CallbackService {
             if (facebookPageData) {
               facebookPageData.accessToken = facebookPage.accessToken;
               return {
-                // data: await this.facebookPageEntity.save(facebookPageData),
+                data: await this.facebookPageEntity.save(facebookPageData),
                 // userRootAccount: RootAccount,
                 status: true,
               };
