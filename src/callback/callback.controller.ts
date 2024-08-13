@@ -43,7 +43,7 @@ export class CallbackController {
     console.log(req.user.id);
     return this.authService.handleOAuthCallback(
       provider,
-      req.user.id,
+      req.user.userId,
       oAuthCallbackDto.pageLinked,
       oAuthCallbackDto,
     );
