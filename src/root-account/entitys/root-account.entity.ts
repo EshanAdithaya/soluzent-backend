@@ -33,7 +33,7 @@ export class RootAccount {
   @Column({ nullable: true })
   accountName: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   accessToken: string;
 
   @Column({ nullable: true })
