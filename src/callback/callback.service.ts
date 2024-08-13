@@ -150,7 +150,64 @@ export class CallbackService {
       };
     }
   }
+  public async refreshPages(
+    rootAccountId: string,
+    userId: string,
+  ): Promise<any> {
+    try {
+      const rootAccount = await this.rootAccountService.findOne(rootAccountId);
+      if (!rootAccount) {
+        throw new NotFoundException(
+          `Root Account with ID ${rootAccountId} not found`,
+        );
+      }
 
+      const currentUser = await this.userRepository.findOne({
+        where: { id: userId },
+      });
+
+      const pagesUrl = `https://graph.facebook.com/me/accounts?fields=id,name,access_token&access_token=${rootAccount.accessToken}`;
+      const response = await axios.get(pagesUrl);
+
+      const pagesData = response.data.data;
+      // let returnData = '';
+      for (const pageData of pagesData) {
+        let facebookPage = await this.facebookPageEntity.findOne({
+          where: { pageId: pageData.id },
+        });
+        console.log(pageData);
+        if (facebookPage) {
+          facebookPage.accessToken = pageData.access_token;
+          await this.facebookPageEntity.save(facebookPage);
+        } else {
+          facebookPage = new FacebookPage();
+          facebookPage.accessToken = pageData.access_token;
+          facebookPage.pageId = pageData.id;
+          facebookPage.pageName = pageData.name;
+          facebookPage.refreshToken = 'refreshToken';
+          facebookPage.expiresIn = 4320000;
+          facebookPage.isActive = true;
+          facebookPage.rootAccount = rootAccount;
+          facebookPage.user = currentUser;
+
+          await this.facebookPageEntity.save(facebookPage);
+        }
+      }
+
+      return {
+        status: true,
+        message: 'Pages updated successfully!',
+      };
+    } catch (error) {
+      console.error('Error fetching and updating pages:', error);
+      return {
+        status: false,
+        message: 'Error fetching and updating pages',
+        error,
+      };
+    }
+  }
+  // 69129896-6f19-43a2-b332-ccf38544fea1
   // private getBasicUserData = async (accessToken, userId, pageLinked) => {
   //   const userUrl = `https://graph.facebook.com/me?fields=id,name,email&access_token=${accessToken}`;
 
