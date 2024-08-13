@@ -85,7 +85,7 @@ export class CallbackService {
           return this.getBasicUserData(
             response.data.access_token,
             userId,
-            pageLinked,
+            // pageLinked,
           );
 
         case 'instagram':
@@ -108,7 +108,7 @@ export class CallbackService {
     }
   }
 
-  private getBasicUserData = async (accessToken, userId, pageLinked) => {
+  private getBasicUserData = async (accessToken, userId) => {
     const userUrl = `https://graph.facebook.com/me?fields=id,name,email&access_token=${accessToken}`;
 
     try {
@@ -134,7 +134,7 @@ export class CallbackService {
         // Assuming createRootAccountDto is populated with necessary data
         const RootAccount = await this.rootAccountService.create(createDto);
         // console.log(RootAccount);
-        if (pageLinked && RootAccount) {
+        if (RootAccount) {
           const pagesUrl = `https://graph.facebook.com/me/accounts?fields=id,name,access_token&access_token=${accessToken}`;
           try {
             // const rootAccount = await this.rootAccountService.findOne(
