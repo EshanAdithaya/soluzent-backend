@@ -82,11 +82,7 @@ export class CallbackService {
       // console.log(response.data);
       switch (provider) {
         case 'facebook':
-          return this.getBasicUserData(
-            response.data.access_token,
-            userId,
-            pageLinked,
-          );
+          return this.createRootAccount(response.data.access_token, userId);
 
         case 'instagram':
           console.log();
@@ -107,110 +103,157 @@ export class CallbackService {
       throw new HttpException(error.response.data, error.response.status);
     }
   }
-
-  private getBasicUserData = async (accessToken, userId, pageLinked) => {
+  public async createRootAccount(
+    accessToken: string,
+    userId: string,
+  ): Promise<any> {
     const userUrl = `https://graph.facebook.com/me?fields=id,name,email&access_token=${accessToken}`;
 
     try {
       const response = await axios.get(userUrl);
-      // console.log(response.data);
-      try {
-        const user = await this.userRepository.findOne({
-          where: { id: userId },
-        });
-        if (!user) {
-          throw new NotFoundException(`User with id ${userId} not found`);
-        }
 
-        const createDto = new CreateRootAccountDto();
-        createDto.platform = SocialMediaPlatform.FACEBOOK;
-        createDto.accountId = response.data.id;
-        createDto.accountName = response.data.name;
-        createDto.accessToken = accessToken;
-        createDto.refreshToken = null;
-        createDto.expiresIn = 4320000;
-        createDto.userId = userId;
-        createDto.email = response.data.email;
-        // Assuming createRootAccountDto is populated with necessary data
-        const RootAccount = await this.rootAccountService.create(createDto);
-        console.log(RootAccount);
-        if (pageLinked && RootAccount) {
-          const pagesUrl = `https://graph.facebook.com/me/accounts?fields=id,name,access_token&access_token=${accessToken}`;
-          try {
-            // const rootAccount = await this.rootAccountService.findOne(
-            //   RootAccount.id,
-            // );
-            const user = await this.userRepository.findOne({
-              where: { id: userId },
-            });
-            if (!user) {
-              throw new NotFoundException(
-                `User Account with ID ${user.id} not found`,
-              );
-            }
-            if (!RootAccount) {
-              throw new NotFoundException(
-                `Root Account with ID ${user.id} not found`,
-              );
-            }
-            const response = await axios.get(pagesUrl);
-            console.log(response);
-            const facebookPage = new FacebookPage();
-            facebookPage.accessToken = response.data.data[0].access_token;
-            facebookPage.pageId = response.data.data[0].id;
-            facebookPage.pageName = response.data.data[0].name;
-            facebookPage.refreshToken = 'refreshToken';
-            facebookPage.expiresIn = 4320000;
-            facebookPage.isActive = true;
-            facebookPage.rootAccount = RootAccount;
-            facebookPage.user = user;
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (!user) {
+        throw new NotFoundException(`User with id ${userId} not found`);
+      }
 
-            const facebookPageData = await this.facebookPageEntity.findOne({
-              where: { pageId: facebookPage.pageId },
-            });
-            if (facebookPageData) {
-              facebookPageData.accessToken = facebookPage.accessToken;
-              return {
-                data: await this.facebookPageEntity.save(facebookPageData),
-                // userRootAccount: RootAccount,
-                status: true,
-              };
-            } else {
-              return {
-                // data: await await this.facebookPageEntity.save(facebookPage),
-                // userRootAccount: RootAccount,
-                status: true,
-              };
-              // return await this.facebookPageEntity.save(facebookPage);
-            }
-          } catch (error) {
-            // console.error('Error fetching pages list:', error);
-            // throw new Error('Error fetching pages list');
-            return {
-              // data: await await this.facebookPageEntity.save(facebookPage),
-              // userRootAccount: RootAccount,
-              status: false,
-              error: error,
-            };
-          }
-        }
+      const createDto = new CreateRootAccountDto();
+      createDto.platform = SocialMediaPlatform.FACEBOOK;
+      createDto.accountId = response.data.id;
+      createDto.accountName = response.data.name;
+      createDto.accessToken = accessToken;
+      createDto.refreshToken = null;
+      createDto.expiresIn = 4320000;
+      createDto.userId = userId;
+      createDto.email = response.data.email;
 
+      const rootAccount = await this.rootAccountService.create(createDto);
+
+      if (rootAccount) {
         return {
           status: true,
-          message: 'Root account created Successfullt',
-          // data: RootAccount,
+          message: 'Root account created successfully!',
+          data: rootAccount,
         };
-        console.log('Root account created successfully!');
-      } catch (error) {
+      } else {
         return {
           status: false,
           message: 'Root account creation failed',
-          error: error,
         };
       }
     } catch (error) {
       console.error('Error fetching basic user data:', error);
-      throw new Error('Error fetching basic user data');
+      return {
+        status: false,
+        message: 'Error fetching basic user data',
+        error,
+      };
     }
-  };
+  }
+
+  // private getBasicUserData = async (accessToken, userId, pageLinked) => {
+  //   const userUrl = `https://graph.facebook.com/me?fields=id,name,email&access_token=${accessToken}`;
+
+  //   try {
+  //     const response = await axios.get(userUrl);
+  //     // console.log(response.data);
+  //     try {
+  //       const user = await this.userRepository.findOne({
+  //         where: { id: userId },
+  //       });
+  //       if (!user) {
+  //         throw new NotFoundException(`User with id ${userId} not found`);
+  //       }
+
+  //       const createDto = new CreateRootAccountDto();
+  //       createDto.platform = SocialMediaPlatform.FACEBOOK;
+  //       createDto.accountId = response.data.id;
+  //       createDto.accountName = response.data.name;
+  //       createDto.accessToken = accessToken;
+  //       createDto.refreshToken = null;
+  //       createDto.expiresIn = 4320000;
+  //       createDto.userId = userId;
+  //       createDto.email = response.data.email;
+  //       // Assuming createRootAccountDto is populated with necessary data
+  //       const RootAccount = await this.rootAccountService.create(createDto);
+  //       console.log(RootAccount);
+  //       if (RootAccount) {
+  //         const pagesUrl = `https://graph.facebook.com/me/accounts?fields=id,name,access_token&access_token=${accessToken}`;
+  //         try {
+  //           // const rootAccount = await this.rootAccountService.findOne(
+  //           //   RootAccount.id,
+  //           // );
+  //           const user = await this.userRepository.findOne({
+  //             where: { id: userId },
+  //           });
+  //           if (!user) {
+  //             throw new NotFoundException(
+  //               `User Account with ID ${user.id} not found`,
+  //             );
+  //           }
+  //           if (!RootAccount) {
+  //             throw new NotFoundException(
+  //               `Root Account with ID ${user.id} not found`,
+  //             );
+  //           }
+  //           const response = await axios.get(pagesUrl);
+  //           console.log(response);
+  //           const facebookPage = new FacebookPage();
+  //           facebookPage.accessToken = response.data.data[0].access_token;
+  //           facebookPage.pageId = response.data.data[0].id;
+  //           facebookPage.pageName = response.data.data[0].name;
+  //           facebookPage.refreshToken = 'refreshToken';
+  //           facebookPage.expiresIn = 4320000;
+  //           facebookPage.isActive = true;
+  //           facebookPage.rootAccount = RootAccount;
+  //           facebookPage.user = user;
+
+  //           const facebookPageData = await this.facebookPageEntity.findOne({
+  //             where: { pageId: facebookPage.pageId },
+  //           });
+  //           if (facebookPageData) {
+  //             facebookPageData.accessToken = facebookPage.accessToken;
+  //             return {
+  //               data: await this.facebookPageEntity.save(facebookPageData),
+  //               // userRootAccount: RootAccount,
+  //               status: true,
+  //             };
+  //           } else {
+  //             return {
+  //               // data: await await this.facebookPageEntity.save(facebookPage),
+  //               // userRootAccount: RootAccount,
+  //               status: true,
+  //             };
+  //             // return await this.facebookPageEntity.save(facebookPage);
+  //           }
+  //         } catch (error) {
+  //           // console.error('Error fetching pages list:', error);
+  //           // throw new Error('Error fetching pages list');
+  //           return {
+  //             // data: await await this.facebookPageEntity.save(facebookPage),
+  //             // userRootAccount: RootAccount,
+  //             status: false,
+  //             error: error,
+  //           };
+  //         }
+  //       }
+
+  //       return {
+  //         status: true,
+  //         message: 'Root account created Successfullt',
+  //         // data: RootAccount,
+  //       };
+  //       console.log('Root account created successfully!');
+  //     } catch (error) {
+  //       return {
+  //         status: false,
+  //         message: 'Root account creation failed',
+  //         error: error,
+  //       };
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching basic user data:', error);
+  //     throw new Error('Error fetching basic user data');
+  //   }
+  // };
 }
