@@ -101,7 +101,7 @@ export class FacebookPageService {
   }
   async delete(id: string): Promise<void> {
     const facebookPage = await this.findOne(id);
-    await this.facebookPageRepository.remove(facebookPage);
+    await this.facebookPageRepository.softDelete(facebookPage.id);
   }
   async createFacebookPost(createPostDto: CreatePostDto, userId: string) {
     try {
