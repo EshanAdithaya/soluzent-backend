@@ -1,8 +1,7 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from 'src/enums/user-role.enum';
-import { CreateUserDto } from './create-user.dto';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto {
   //   @ApiProperty({
   //     description: 'The unique username of the user',
   //     example: 'johndoe',
