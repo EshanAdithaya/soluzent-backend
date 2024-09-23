@@ -36,11 +36,11 @@ import { OpenaiFacebookModule } from './openai-facebook/openai-facebook.module';
     // }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '145.14.153.51',
-      // port: 8889,
-      username: 'u304157271_root',
-      password: 'JzHN/*L0r|S',
-      database: 'u304157271_social_tool_v1',
+      host: 'soluzentsaas-do-user-17683072-0.i.db.ondigitalocean.com',
+       port: 25060,
+      username: 'doadmin',
+      password: 'AVNS_F5_5a9KGgEZAKR-_YAc',
+      database: 'defaultdb',
       entities: [
         UserEntity,
         RootAccount,
