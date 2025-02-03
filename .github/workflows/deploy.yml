@@ -28,6 +28,6 @@ jobs:
             cd ~/projects/soluzent-backend
             git pull
             npm run build
-            pm2 stop 0
+            pm2 stop 1
             pm2 start dist/main.js
             pm2 save
